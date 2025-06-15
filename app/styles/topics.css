@@ -1,0 +1,50 @@
+[class*="language-"] {
+    margin: 1px;
+    background-color: #f5f5f5;
+    /* border: 1px solid #ddd; */
+    /* border-radius: 5px; */
+    overflow-x: auto;
+}
+
+.markdown-body .hljs-ln:before {
+    content: attr(data-line-number);
+    display: block;
+    text-align: right;
+    color: #999;
+}
+
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #ddd;
+    border-radius: 5px 5px 0 0;
+    background-color: #f5f5f5;
+    align-items: center;
+    margin: 20px 20px 0 20px;
+}
+
+.code-lang {
+    font-weight: bold;
+}
+
+code {
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+.code-header .code-lang {
+    margin-left: 5px;
+}
+
+.code-header button {
+    margin-right: 5px;
+}
+
+pre {
+    margin: 0 20px 20px 20px;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    background-color: #f5f5f5;
+    overflow-x: auto;
+}
