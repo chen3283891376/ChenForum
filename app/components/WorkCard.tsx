@@ -1,4 +1,4 @@
-import * as React from'react';
+import * as React from 'react';
 import { Card, CardContent, CardHeader, Typography, Button } from '@mui/material';
 
 import type { Topic } from '~/interface/topics';
@@ -6,12 +6,13 @@ import type { Topic } from '~/interface/topics';
 export function WorkCard({ topic }: { topic: Topic }) {
     return (
         <Card key={topic.id}>
-            <CardHeader
-                title={topic.name}
-                subheader={topic.description}
-            />
+            <CardHeader title={topic.name} subheader={topic.description} />
             <CardContent>
-                <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} variant="body2" color="text.primary">
+                <Typography
+                    sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                    variant="body2"
+                    color="text.primary"
+                >
                     {topic.content}
                 </Typography>
                 <Button variant="contained" color="primary" href={`/topic/${topic.id}`}>
@@ -19,5 +20,5 @@ export function WorkCard({ topic }: { topic: Topic }) {
                 </Button>
             </CardContent>
         </Card>
-    )
+    );
 }

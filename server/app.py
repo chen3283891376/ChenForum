@@ -1,7 +1,6 @@
 # 论坛api接口
 from flask import Flask, request, jsonify
-from flask_cors import CORS
-import sqlite3
+import sqlite3, hashlib
 
 def init_db_articles():
     conn = sqlite3.connect('articles.db')
@@ -26,7 +25,6 @@ conn_users = sqlite3.connect('users.db', check_same_thread=False)
 c_users = conn_users.cursor()
 
 app = Flask(__name__)
-CORS(app)
 
 @app.route('/api/topics', methods=['GET'])
 def get_topics():
@@ -80,20 +78,23 @@ def search_topic():
 def register():
     username = request.json['username']
     password = request.json['password']
+    if (c_users.execute('SELECT * FROM users WHERE username=?', (username,)).fetchone() is not None):
+        return jsonify({'message': '用户名已存在!'})
     c_users.execute('INSERT INTO users (username, password) VALUES (?,?)', (username, password))
     conn_users.commit()
-    return jsonify({'message': 'Account registered successfully!'})
+    return jsonify({'message': '注册成功!'})
 
 @app.route('/api/accounts/login', methods=['POST'])
 def login():
     username = request.json['username']
     password = request.json['password']
+    password = hashlib.sha256(password.encode('utf-8')).hexdigest()
     c_users.execute('SELECT * FROM users WHERE username=? AND password=?', (username, password))
     user = c_users.fetchone()
     if user:
-        return jsonify({'message': 'Login successful!'})
+        return jsonify({'message': '登录成功!'})
     else:
-        return jsonify({'message': 'Invalid username or password!'})
+        return jsonify({'message': '用户名或密码错误!'})
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,4 +1,4 @@
-import * as React from'react';
+import * as React from 'react';
 import Navbar from '~/components/Navbar';
 import { Container } from '@mui/material';
 import { WorkCard } from '~/components/WorkCard';
@@ -13,20 +13,20 @@ export default function Index() {
             const response = await fetch('/api/topics');
             const responseData = await response.json();
             setTopics(responseData);
-        }
+        };
         if (!ignore) func();
         return () => {
             ignore = true;
-        }
+        };
     }, []);
     return (
         <>
             <Navbar />
-            <Container className='grid grid-cols-4 md:grid-cols-4 gap-4' sx={{ position: 'relative', top: '80px' }}>
-                {topics.map((topic) => (
+            <Container className="grid grid-cols-4 gap-4 md:grid-cols-4" sx={{ position: 'relative', top: '80px' }}>
+                {topics.map(topic => (
                     <WorkCard key={topic.id} topic={topic} />
                 ))}
             </Container>
         </>
-    )
+    );
 }

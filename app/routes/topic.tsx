@@ -27,18 +27,22 @@ const CodeHeader = ({ lang, code }: { lang: string; code: string }) => {
     return (
         <div className="code-header">
             <span className="code-lang">{lang === 'undefined' ? 'Plain Text' : lang}</span>
-            <Button size='small' variant="contained" onClick={handleCopyClick} color="primary">{copyText}</Button>
+            <Button size="small" variant="contained" onClick={handleCopyClick} color="primary">
+                {copyText}
+            </Button>
         </div>
     );
 };
-
 
 const CodeBlock = ({ code, lang }: { code: string; lang: string }) => {
     return (
         <div className="code-wrapper">
             <CodeHeader lang={lang} code={code} />
             <pre>
-                <code className={`language-${lang} hljs`} dangerouslySetInnerHTML={{ __html: hljs.highlight(code, { language: lang }).value }} />
+                <code
+                    className={`language-${lang} hljs`}
+                    dangerouslySetInnerHTML={{ __html: hljs.highlight(code, { language: lang }).value }}
+                />
             </pre>
         </div>
     );
@@ -62,11 +66,8 @@ const MarkdownContent = ({ content }: { content: string }) => {
         const doc = parser.parseFromString(html, 'text/html');
         const codeElements = doc.querySelectorAll('pre code');
 
-        const blocks = Array.from(codeElements).map((el) => {
-            const lang = el.className
-                .replace('language-', '')
-                .replace(' hljs', '')
-                .replace('hljs ', '');
+        const blocks = Array.from(codeElements).map(el => {
+            const lang = el.className.replace('language-', '').replace(' hljs', '').replace('hljs ', '');
             return { code: el.textContent || '', lang };
         });
 
@@ -84,7 +85,7 @@ const MarkdownContent = ({ content }: { content: string }) => {
 
 export async function loader({ request, params }: Route.LoaderArgs) {
     return {
-        id: params.id
+        id: params.id,
     };
 }
 
