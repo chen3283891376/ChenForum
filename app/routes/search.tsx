@@ -1,6 +1,6 @@
 import * as React from'react';
 import { Typography, Container, Icon } from '@mui/material';
-import Navar from '~/components/Navbar';
+import Navbar from '~/components/Navbar';
 import { Search as SearchIcon } from '@mui/icons-material';
 import { WorkCard } from '~/components/WorkCard';
 
@@ -32,7 +32,7 @@ export default function Search({ loaderData={ keyword: null } }: { loaderData: {
     }, []);
     return (
         <>
-            <Navar />
+            <Navbar />
             <Container sx={{ position: 'relative', top: '80px' }}>
                 <Typography variant="h5">
                     <Icon sx={{ mr: 1 }} fontSize="medium">

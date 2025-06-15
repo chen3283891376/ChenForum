@@ -1,5 +1,5 @@
 import * as React from'react';
-import Navar from '~/components/Navbar';
+import Navbar from '~/components/Navbar';
 import { Container } from '@mui/material';
 import { WorkCard } from '~/components/WorkCard';
 
@@ -21,7 +21,7 @@ export default function Index() {
     }, []);
     return (
         <>
-            <Navar />
+            <Navbar />
             <Container className='grid grid-cols-4 md:grid-cols-4 gap-4' sx={{ position: 'relative', top: '80px' }}>
                 {topics.map((topic) => (
                     <WorkCard key={topic.id} topic={topic} />

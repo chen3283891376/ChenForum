@@ -2,7 +2,7 @@ import * as React from'react';
 import { AppBar, Toolbar, Typography, TextField, IconButton } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 
-const Navar = () => {
+const Navbar = () => {
     const [keyword, setKeyword] = React.useState<string>('');
     return (
         <AppBar position="fixed" color="info" sx={{ marginBottom: '10rem' }}>
@@ -47,4 +47,4 @@ const Navar = () => {
     );
 };
 
-export default Navar;
+export default Navbar;
