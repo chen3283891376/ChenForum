@@ -3,4 +3,5 @@ export interface Topic {
     name: string;
     content: string;
     description: string;
+    author: string;
 }

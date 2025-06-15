@@ -2,6 +2,7 @@ import * as React from "react";
 import { TextField, Button, Container, Card, CardContent, CardActions, Box, Typography } from "@mui/material";
 import { Link } from "react-router";
 import AutoCloseAlert from '~/components/AutoCloseAlert';
+import { setCookie } from "~/utils";
 
 export default function Login() {
     const [username, setUsername] = React.useState("");
@@ -29,6 +30,8 @@ export default function Login() {
                      children={responseData.message}
                  />,
             ]);
+            setCookie("name", username, 2222, "/")
+            setCookie("isLoggedIn", "true", 2222, "/")
             setTimeout(() => {
                 window.location.href = "/";
             }, 1000);

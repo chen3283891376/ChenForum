@@ -6,7 +6,7 @@ def init_db_articles():
     conn = sqlite3.connect('articles.db')
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS topics
-                 (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, content TEXT, description TEXT)''')
+                 (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, content TEXT, description TEXT, author TEXT)''')
     conn.commit()
     conn.close()
 def init_db_users():
@@ -30,7 +30,8 @@ app = Flask(__name__)
 def get_topics():
     c_articles.execute('SELECT * FROM topics')
     topics = c_articles.fetchall()
-    topics_list = [{'id': topic[0], 'name': topic[1], 'content': topic[2], 'description': topic[3]} for topic in topics]
+    topics_list = [{'id': topic[0], 'name': topic[1], 'content': topic[2], 'description': topic[3], 'author': topic[4]} for topic in topics]
+    topics_list.reverse()
     return jsonify(topics_list)
 
 
@@ -39,15 +40,16 @@ def create_topic():
     title = request.json['title']
     content = request.json['content']
     description = request.json['description']
-    c_articles.execute('INSERT INTO topics (title, content, description) VALUES (?,?,?)', (title, content, description))
+    author = request.json['author']
+    c_articles.execute('INSERT INTO topics (title, content, description, author) VALUES (?,?,?,?)', (title, content, description, author))
     conn_articles.commit()
-    return jsonify({'message': 'Topic created successfully!'})
+    return jsonify({'message': '文章创建成功!'})
 
 @app.route('/api/topics/<int:id>', methods=['GET'])
 def get_topic(id):
     c_articles.execute('SELECT * FROM topics WHERE id=?', (id,))
     topic = c_articles.fetchone()
-    topic_dict = {'id': topic[0], 'name': topic[1], 'content': topic[2], 'description': topic[3]}
+    topic_dict = {'id': topic[0], 'name': topic[1], 'content': topic[2], 'description': topic[3], 'author': topic[4]}
     return jsonify(topic_dict)
 
 
@@ -56,22 +58,24 @@ def update_topic(id):
     title = request.json['title']
     content = request.json['content']
     description = request.json['description']
-    c_articles.execute('UPDATE topics SET title=?, content=? description=? WHERE id=?', (title, content, description, id))
+    author = request.json['author']
+    c_articles.execute('UPDATE topics SET title=?, content=? description=? author=? WHERE id=?', (title, content, description, author, id))
     conn_articles.commit()
-    return jsonify({'message': 'Topic updated successfully!'})
+    return jsonify({'message': '文章更新成功!'})
 
 @app.route('/api/topics/<int:id>', methods=['DELETE'])
 def delete_topic(id):
     c_articles.execute('DELETE FROM topics WHERE id=?', (id,))
     conn_articles.commit()
-    return jsonify({'message': 'Topic deleted successfully!'})
+    return jsonify({'message': '文章删除成功!'})
 
 @app.route('/api/topics/search', methods=['GET'])
 def search_topic():
     keyword = request.args.get('keyword')
     c_articles.execute('SELECT * FROM topics WHERE title LIKE ?', ('%'+keyword+'%',))
     topics = c_articles.fetchall()
-    topic_list = [{'id': topic[0], 'name': topic[1], 'content': topic[2], 'description': topic[3]} for topic in topics]
+    topic_list = [{'id': topic[0], 'name': topic[1], 'content': topic[2], 'description': topic[3], 'author': topic[4]} for topic in topics]
+    topic_list.reverse()
     return jsonify(topic_list)
 
 @app.route('/api/accounts/register', methods=['POST'])
