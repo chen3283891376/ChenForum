@@ -18,6 +18,7 @@ export function WorkCard({ topic }: { topic: Topic }) {
                 <Typography variant="caption" color="text.secondary">
                     作者：{topic.author}
                 </Typography>
+                <br />
                 <Button variant="contained" color="primary" href={`/topic/${topic.id}`}>
                     详情
                 </Button>
