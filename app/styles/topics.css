@@ -27,7 +27,7 @@
     margin: 1.5rem 0;
     padding: 1rem;
     overflow: auto;
-    /* background: #ffffff; */
+    background: #f6f6f6;
     color: #333333;
     border: 1px solid #e0e0e0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -42,18 +42,44 @@
 
 /* 代码块标题栏样式 */
 .code-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    margin: 1.5rem 0 0;
-    border-radius: 8px 8px 0 0;
-    background: linear-gradient(90deg, #e6f7ff, #bbdefb);
-    color: #1976d2;
-    font-weight: 500;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-    position: relative;
-    z-index: 1;
+    background: #f6f6f6;
+    padding: 5px 5px 5px 10px;
+    overflow: auto;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.copy-btn {
+    float: right;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition:
+        background-color 0.3s ease,
+        transform 0.3s ease;
+}
+
+.copy-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* 代码块行号样式 */
+.hljs-ln,
+.hljs-ln-numbers,
+.hljs-ln-code,
+.hljs-ln > tbody,
+.hljs-ln > tbody > tr {
+    border: none;
+}
+
+.hljs-ln-numbers {
+    text-align: center;
+    border-right: 2px solid #555;
+    padding-right: 5px !important;
+    color: #888;
 }
 
 /* 引用块样式增强 */

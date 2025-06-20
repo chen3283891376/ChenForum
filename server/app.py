@@ -9,6 +9,13 @@ def init_db_articles():
                  (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, content TEXT, description TEXT, author TEXT)''')
     conn.commit()
     conn.close()
+def init_db_comments():
+    conn = sqlite3.connect('comments.db')
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS comments
+                 (id INTEGER PRIMARY KEY AUTOINCREMENT, content TEXT, author TEXT, topic_id INTEGER)''')
+    conn.commit()
+    conn.close()
 def init_db_users():
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
@@ -17,12 +24,15 @@ def init_db_users():
     conn.commit()
     conn.close()
 init_db_articles()
+init_db_comments()
 init_db_users()
 
 conn_articles = sqlite3.connect('articles.db', check_same_thread=False)
 c_articles = conn_articles.cursor()
 conn_users = sqlite3.connect('users.db', check_same_thread=False)
 c_users = conn_users.cursor()
+conn_comments = sqlite3.connect('comments.db', check_same_thread=False)
+c_comments = conn_comments.cursor()
 
 app = Flask(__name__)
 
@@ -69,10 +79,26 @@ def delete_topic(id):
     conn_articles.commit()
     return jsonify({'message': '文章删除成功!'})
 
+@app.route('/api/topics/<int:id>/comments', methods=['GET'])
+def get_comments(id):
+    c_comments.execute('SELECT * FROM comments WHERE topic_id=?', (id,))
+    comments = c_comments.fetchall()
+    comments_list = [{'id': comment[0], 'content': comment[1], 'author': comment[2], 'topic_id': comment[3]} for comment in comments]
+    comments_list.reverse()
+    return jsonify(comments_list)
+
+@app.route('/api/topics/<int:id>/comments', methods=['POST'])
+def create_comment(id):
+    content = request.json['content']
+    author = request.json['author']
+    c_comments.execute('INSERT INTO comments (content, author, topic_id) VALUES (?,?,?)', (content, author, id))
+    conn_comments.commit()
+    return jsonify({'message': '评论创建成功!'})
+
 @app.route('/api/topics/search', methods=['GET'])
 def search_topic():
     keyword = request.args.get('keyword')
-    c_articles.execute('SELECT * FROM topics WHERE title LIKE ?', ('%'+keyword+'%',))
+    c_articles.execute('SELECT * FROM topics WHERE title LIKE ? OR content LIKE ? OR description LIKE ?', ('%'+keyword+'%', '%'+keyword+'%', '%'+keyword+'%'))
     topics = c_articles.fetchall()
     topic_list = [{'id': topic[0], 'name': topic[1], 'content': topic[2], 'description': topic[3], 'author': topic[4]} for topic in topics]
     topic_list.reverse()

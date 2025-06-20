@@ -3,6 +3,8 @@ import { Container, Typography, Card, CardHeader, CardContent } from '@mui/mater
 import Navbar from '~/components/Navbar';
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
+import DomPurify from 'dompurify';
+import CommentBox from '~/components/CommentBox';
 import 'highlight.js/styles/stackoverflow-light.min.css';
 import '~/styles/topics.css';
 
@@ -28,20 +30,9 @@ export default function Topic({ loaderData = { id: '1', isLoggedIn: false, name:
             const response = await fetch(`/api/topics/${loaderData.id}`);
             const responseData: TypeTopic = await response.json();
             setTopic(responseData);
-            const md = new MarkdownIt({
-                highlight: (str, lang) => {
-                    if (lang && hljs.getLanguage(lang)) {
-                        try {
-                            return hljs.highlight(lang, str).value;
-                        } catch (__) {
-                            return '';
-                        }
-                    }
-                    return '';
-                },
-            });
+            const md = new MarkdownIt();
             const content = md.render(responseData.content);
-            setMdContent(content);
+            setMdContent(DomPurify.sanitize(content));
         };
 
         if (!ignore) func();
@@ -50,6 +41,43 @@ export default function Topic({ loaderData = { id: '1', isLoggedIn: false, name:
             ignore = true;
         };
     }, []);
+
+    React.useEffect(() => {
+        hljs.highlightAll();
+        document.querySelectorAll('.markdown-body pre code').forEach(el => {
+            if (el.parentNode === null) return;
+
+            const lang = el.className
+                .replace('language-', '')
+                .replace(' hljs', '')
+                .replace('hljs ', '');
+            let head_el = document.createElement('div');
+            head_el.className = 'code-header';
+
+            let lang_el = document.createElement('span');
+            if (lang === 'undefined') {
+                lang_el.innerText = 'Plain Text';
+            } else {
+                lang_el.innerText = lang;
+            }
+            head_el.appendChild(lang_el);
+
+            let copy_el = document.createElement('button');
+            copy_el.className = 'copy-btn';
+            copy_el.innerText = 'Copy';
+            copy_el.addEventListener('click', () => {
+                // @ts-ignore  // TODO: fix this type error
+                navigator.clipboard.writeText(el.textContent).then(() => null);
+                copy_el.innerText = 'Copied!';
+                setTimeout(() => {
+                    copy_el.innerText = 'Copy';
+                }, 1000);
+            });
+            head_el.appendChild(copy_el);
+
+            el.parentNode.insertBefore(head_el, el);
+        });
+    }, [mdContent]);
 
     return (
         <>
@@ -66,6 +94,7 @@ export default function Topic({ loaderData = { id: '1', isLoggedIn: false, name:
                             </CardContent>
                         </Card>
                         <div className="markdown-body" dangerouslySetInnerHTML={{ __html: mdContent }} />
+                        <CommentBox topic_id={loaderData.id} author={loaderData.name} />
                     </>
                 )}
             </Container>
