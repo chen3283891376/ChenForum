@@ -43,6 +43,7 @@ export default function Search({ loaderData = { keyword: null, isLoggedIn: false
                     </Icon>
                     搜索结果
                 </Typography>
+                {searchResult.length === 0 && <Typography variant="h5">没有搜索到相关内容</Typography>}
                 <div className="grid grid-cols-4 gap-4 md:grid-cols-4">
                     {searchResult.map(topic => (
                         <WorkCard key={topic.id} topic={topic} />
