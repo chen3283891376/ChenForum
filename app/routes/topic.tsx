@@ -3,9 +3,11 @@ import { Container, Typography, Card, CardHeader, CardContent } from '@mui/mater
 import Navbar from '~/components/Navbar';
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
+import renderMathInElement from '~/util/katex-auto-render';
 import DomPurify from 'dompurify';
 import CommentBox from '~/components/CommentBox';
 import 'highlight.js/styles/stackoverflow-light.min.css';
+import 'katex/dist/katex.min.css';
 import '~/styles/topics.css';
 
 import type { Route } from './+types/topic';
@@ -44,6 +46,14 @@ export default function Topic({ loaderData = { id: '1', isLoggedIn: false, name:
 
     React.useEffect(() => {
         hljs.highlightAll();
+        renderMathInElement(document.body, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true },
+            ],
+        });
         document.querySelectorAll('.markdown-body pre code').forEach(el => {
             if (el.parentNode === null) return;
 
