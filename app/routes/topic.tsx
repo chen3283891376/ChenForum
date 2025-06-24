@@ -54,7 +54,8 @@ export default function Topic({ loaderData = { id: '1', isLoggedIn: false, name:
                 { left: "\\[", right: "\\]", display: true },
             ],
         });
-        document.querySelectorAll('.markdown-body pre code').forEach(el => {
+        document.querySelectorAll('.markdown-body pre code').forEach(element => {
+            const el = element as HTMLElement;
             if (el.parentNode === null) return;
 
             const lang = el.className
@@ -76,8 +77,7 @@ export default function Topic({ loaderData = { id: '1', isLoggedIn: false, name:
             copy_el.className = 'copy-btn';
             copy_el.innerText = 'Copy';
             copy_el.addEventListener('click', () => {
-                // @ts-ignore  // TODO: fix this type error
-                navigator.clipboard.writeText(el.textContent).then(() => null);
+                navigator.clipboard.writeText(el.outerText).then(() => null);
                 copy_el.innerText = 'Copied!';
                 setTimeout(() => {
                     copy_el.innerText = 'Copy';
@@ -104,7 +104,7 @@ export default function Topic({ loaderData = { id: '1', isLoggedIn: false, name:
                             </CardContent>
                         </Card>
                         <div className="markdown-body" dangerouslySetInnerHTML={{ __html: mdContent }} />
-                        <CommentBox topic_id={loaderData.id} author={loaderData.name} />
+                        <CommentBox topic_id={loaderData.id} author={loaderData.name} isLoggedIn={loaderData.isLoggedIn} />
                     </>
                 )}
             </Container>

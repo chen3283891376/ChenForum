@@ -4,7 +4,7 @@ import { Send } from '@mui/icons-material';
 
 import type { Comment } from '~/interface/comments';
 
-export default function CommentBox({ topic_id, author }: { topic_id: string, author: string }) {
+export default function CommentBox({ topic_id, author, isLoggedIn }: { topic_id: string, author: string, isLoggedIn: boolean }) {
     const [comment, setComment] = React.useState('');
     const [comments, setComments] = React.useState<Comment[]>([]);
 
@@ -41,6 +41,7 @@ export default function CommentBox({ topic_id, author }: { topic_id: string, aut
                         id="outlined-basic"
                         label="评论"
                         variant="outlined"
+                        disabled={!isLoggedIn}
                         multiline
                         fullWidth
                         value={comment}
@@ -49,7 +50,7 @@ export default function CommentBox({ topic_id, author }: { topic_id: string, aut
                     />
                 </CardContent>
                 <CardActions>
-                    <IconButton aria-label="send" onClick={handleSubmit}>
+                    <IconButton disabled={!comment || comment.trim().length === 0 || !isLoggedIn } aria-label="send" onClick={handleSubmit}>
                         <Send />
                     </IconButton>
                 </CardActions>
