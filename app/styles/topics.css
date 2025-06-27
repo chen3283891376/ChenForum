@@ -97,6 +97,37 @@ blockquote p {
     color: #444;
 }
 
+/* 图片样式增强 */
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 表格样式增强 */
+table {
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    overflow: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+table th,
+table td {
+    padding: 0.5rem;
+    border: 1px solid #e0e0e0;
+    text-align: left;
+}
+
+table th {
+    background-color: #f6f6f6;
+    font-weight: bold;
+}
+
 /* 代码块交互效果 */
 .markdown-body pre:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
