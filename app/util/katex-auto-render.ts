@@ -1,4 +1,5 @@
 /* eslint no-console:0 */
+/* Turn to typescript by 豆包AI */
 
 import katex, { ParseError } from "katex";
 import type { KatexOptions } from "katex";

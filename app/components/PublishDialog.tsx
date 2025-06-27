@@ -1,5 +1,5 @@
 import * as React from'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, InputAdornment, IconButton, Typography } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, InputAdornment } from '@mui/material';
 
 export default function PublishDialog({ open, setOpen, name }: { open: boolean, setOpen: (open: boolean) => void, name: string }) {
     const [title, setTitle] = React.useState('');
@@ -9,7 +9,7 @@ export default function PublishDialog({ open, setOpen, name }: { open: boolean, 
         setOpen(false);
     };
     const handlePublish = async () => {
-        const response = await fetch('/api/topics', {
+        await fetch('/api/topics', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
