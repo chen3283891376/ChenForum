@@ -1,12 +1,13 @@
 import * as React from'react';
-import { TextField, Card, CardContent, CardActions, IconButton, Stack, Typography, Button, Divider } from '@mui/material';
-import { Send } from '@mui/icons-material';
+import { TextField, Card, CardContent, CardActions, IconButton, Stack, Typography, Divider } from '@mui/material';
+import { Send, Favorite, FavoriteBorder } from '@mui/icons-material';
 
 import type { Comment } from '~/interface/comments';
 
 export default function CommentBox({ topic_id, author, isLoggedIn }: { topic_id: string, author: string, isLoggedIn: boolean }) {
     const [comment, setComment] = React.useState('');
     const [comments, setComments] = React.useState<Comment[]>([]);
+    const [isLiked, setIsLiked] = React.useState(false);
 
     React.useEffect(() => {
         let ignore = false;
@@ -14,6 +15,10 @@ export default function CommentBox({ topic_id, author, isLoggedIn }: { topic_id:
             const response = await fetch(`/api/topics/${topic_id}/comments`);
             const data = await response.json();
             setComments(data);
+
+            const response2 = await fetch(`/api/topics/${topic_id}/has_liked?username=${author}`);
+            const data2: { has_liked: boolean } = await response2.json();
+            setIsLiked(data2.has_liked);
         };
         if (!ignore) func();
         return () => {
@@ -50,8 +55,20 @@ export default function CommentBox({ topic_id, author, isLoggedIn }: { topic_id:
                     />
                 </CardContent>
                 <CardActions>
-                    <IconButton disabled={!comment || comment.trim().length === 0 || !isLoggedIn } aria-label="send" onClick={handleSubmit}>
+                    <IconButton color='primary' disabled={!comment || comment.trim().length === 0 || !isLoggedIn } aria-label="send" onClick={handleSubmit}>
                         <Send />
+                    </IconButton>
+                    <IconButton aria-label="like" color="primary" onClick={() => {
+                        fetch(`/api/topics/${topic_id}/likes`, {
+                            method: (isLiked ? 'DELETE' : 'POST'),
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ username: author }),
+                        });
+                        setIsLiked(!isLiked);
+                    }} disabled={!isLoggedIn}>
+                        {isLiked? <Favorite /> : <FavoriteBorder />}
                     </IconButton>
                 </CardActions>
             </Card>

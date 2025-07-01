@@ -4,6 +4,19 @@ import { Card, CardContent, CardHeader, Typography, Button } from '@mui/material
 import type { Topic } from '~/interface/topics';
 
 export function WorkCard({ topic }: { topic: Topic }) {
+    const [likes, setLikes] = React.useState(0);
+    React.useEffect(() => {
+        let ignore = false;
+        const func = async () => {
+            const response = await fetch(`/api/topics/${topic.id}/likes`);
+            const responseData: { likes: number } = await response.json();
+            setLikes(responseData.likes | 0)
+        };
+        if (!ignore) func();
+        return () => {
+            ignore = true;
+        };
+    }, []);
     return (
         <Card key={topic.id}>
             <CardHeader title={topic.name} subheader={topic.description} />
@@ -16,7 +29,7 @@ export function WorkCard({ topic }: { topic: Topic }) {
                     {topic.content}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
-                    作者：{topic.author}
+                    作者：{topic.author} | 点赞：{likes}
                 </Typography>
                 <br />
                 <Button variant="contained" color="primary" href={`/topic/${topic.id}`}>

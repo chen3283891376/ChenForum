@@ -16,6 +16,13 @@ def init_db_comments():
                  (id INTEGER PRIMARY KEY AUTOINCREMENT, content TEXT, author TEXT, topic_id INTEGER)''')
     conn.commit()
     conn.close()
+def init_db_likes():
+    conn = sqlite3.connect('likes.db')
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS likes
+                 (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, topic_id INTEGER)''')
+    conn.commit()
+    conn.close()
 def init_db_users():
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
@@ -25,6 +32,7 @@ def init_db_users():
     conn.close()
 init_db_articles()
 init_db_comments()
+init_db_likes()
 init_db_users()
 
 conn_articles = sqlite3.connect('articles.db', check_same_thread=False)
@@ -33,6 +41,8 @@ conn_users = sqlite3.connect('users.db', check_same_thread=False)
 c_users = conn_users.cursor()
 conn_comments = sqlite3.connect('comments.db', check_same_thread=False)
 c_comments = conn_comments.cursor()
+conn_likes = sqlite3.connect('likes.db', check_same_thread=False)
+c_likes = conn_likes.cursor()
 
 app = Flask(__name__)
 
@@ -94,6 +104,36 @@ def create_comment(id):
     c_comments.execute('INSERT INTO comments (content, author, topic_id) VALUES (?,?,?)', (content, author, id))
     conn_comments.commit()
     return jsonify({'message': '评论创建成功!'})
+
+@app.route('/api/topics/<int:id>/likes', methods=['GET'])
+def get_likes(id):
+    c_likes.execute('SELECT * FROM likes WHERE topic_id=?', (id,))
+    likes = c_likes.fetchall()
+    return jsonify({'likes': len(likes)})
+
+@app.route('/api/topics/<int:id>/likes', methods=['POST'])
+def create_like(id):
+    username = request.json['username']
+    c_likes.execute('INSERT INTO likes (username, topic_id) VALUES (?,?)', (username, id))
+    conn_likes.commit()
+    return jsonify({'message': '点赞成功!'})
+
+@app.route('/api/topics/<int:id>/likes', methods=['DELETE'])
+def delete_like(id):
+    username = request.json['username']
+    c_likes.execute('DELETE FROM likes WHERE username=? AND topic_id=?', (username, id))
+    conn_likes.commit()
+    return jsonify({'message': '取消点赞成功!'})
+
+@app.route('/api/topics/<int:id>/has_liked', methods=['GET'])
+def has_liked(id):
+    username = request.args.get('username')
+    c_likes.execute('SELECT * FROM likes WHERE username=? AND topic_id=?', (username, id))
+    like = c_likes.fetchone()
+    if like:
+        return jsonify({'has_liked': True})
+    else:
+        return jsonify({'has_liked': False})
 
 @app.route('/api/topics/search', methods=['GET'])
 def search_topic():
