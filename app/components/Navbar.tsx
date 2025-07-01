@@ -32,7 +32,7 @@ const Navbar = ({ isLoggedIn, name }: { isLoggedIn: boolean; name: string }) => 
                         textDecoration: 'none',
                     }}
                 >
-                    ChenWall
+                    ChenForum
                 </Typography>
                 <Typography sx={{ flexGrow: 1 }}></Typography>
                 <TextField
@@ -70,6 +70,10 @@ const Navbar = ({ isLoggedIn, name }: { isLoggedIn: boolean; name: string }) => 
                                 },
                             }}
                         >
+                            <MenuItem onClick={() => {
+                                handleClose();
+                                location.href = `/user/${name}`;
+                            }}>个人中心</MenuItem>
                             <MenuItem onClick={() => {
                                 handleClose();
                                 setOpenDialog(true);

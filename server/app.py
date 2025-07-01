@@ -144,6 +144,22 @@ def search_topic():
     topic_list.reverse()
     return jsonify(topic_list)
 
+@app.route('/api/accounts/check_username', methods=['GET'])
+def check_username():
+    username = request.args.get('username')
+    if (c_users.execute('SELECT * FROM users WHERE username=?', (username,)).fetchone() is not None):
+        return jsonify({'has_username': True})
+    else:
+        return jsonify({'has_username': False})
+
+@app.route('/api/accounts/<string:name>/topics', methods=['GET'])
+def get_user_topics(name):
+    c_articles.execute('SELECT * FROM topics WHERE author=?', (name,))
+    topics = c_articles.fetchall()
+    topic_list = [{'id': topic[0], 'name': topic[1], 'content': topic[2], 'description': topic[3], 'author': topic[4]} for topic in topics]
+    topic_list.reverse()
+    return jsonify({ "topics": topic_list })
+
 @app.route('/api/accounts/register', methods=['POST'])
 def register():
     username = request.json['username']

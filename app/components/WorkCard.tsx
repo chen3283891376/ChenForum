@@ -29,7 +29,7 @@ export function WorkCard({ topic }: { topic: Topic }) {
                     {topic.content}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
-                    作者：{topic.author} | 点赞：{likes}
+                    作者：<a href={`/user/${topic.author}`}>{topic.author}</a> | 点赞：{likes}
                 </Typography>
                 <br />
                 <Button variant="contained" color="primary" href={`/topic/${topic.id}`}>

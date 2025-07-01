@@ -10,7 +10,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <head>
                 <meta charSet="utf-8" />
                 <link rel="icon" href="/favicon.ico" />
-                <title>ChenWall</title>
+                <title>ChenForum</title>
                 <Meta />
                 <Links />
             </head>

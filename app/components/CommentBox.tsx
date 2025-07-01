@@ -79,7 +79,7 @@ export default function CommentBox({ topic_id, author, isLoggedIn }: { topic_id:
                         <Card key={comment.topic_id}>
                             <CardContent>
                                 <Stack direction="row" spacing={2}>
-                                    <Typography variant="h6" color="text.secondary">
+                                    <Typography component={"a"} href={`/user/${comment.author}`} variant="h6" color="text.secondary">
                                         {comment.author}
                                     </Typography>
                                     <Typography variant="h6" color="text.primary">
