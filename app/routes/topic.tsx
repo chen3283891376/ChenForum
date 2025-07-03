@@ -48,20 +48,17 @@ export default function Topic({ loaderData = { id: '1', isLoggedIn: false, name:
         hljs.highlightAll();
         renderMathInElement(document.body, {
             delimiters: [
-                { left: "$$", right: "$$", display: true },
-                { left: "$", right: "$", display: false },
-                { left: "\\(", right: "\\)", display: false },
-                { left: "\\[", right: "\\]", display: true },
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true },
             ],
         });
         document.querySelectorAll('.markdown-body pre code').forEach(element => {
             const el = element as HTMLElement;
             if (el.parentNode === null) return;
 
-            const lang = el.className
-                .replace('language-', '')
-                .replace(' hljs', '')
-                .replace('hljs ', '');
+            const lang = el.className.replace('language-', '').replace(' hljs', '').replace('hljs ', '');
             let head_el = document.createElement('div');
             head_el.className = 'code-header';
 
@@ -104,7 +101,11 @@ export default function Topic({ loaderData = { id: '1', isLoggedIn: false, name:
                             </CardContent>
                         </Card>
                         <div className="markdown-body" dangerouslySetInnerHTML={{ __html: mdContent }} />
-                        <CommentBox topic_id={loaderData.id} author={loaderData.name} isLoggedIn={loaderData.isLoggedIn} />
+                        <CommentBox
+                            topic_id={loaderData.id}
+                            author={loaderData.name}
+                            isLoggedIn={loaderData.isLoggedIn}
+                        />
                     </>
                 )}
             </Container>

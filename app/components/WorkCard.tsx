@@ -10,7 +10,7 @@ export function WorkCard({ topic }: { topic: Topic }) {
         const func = async () => {
             const response = await fetch(`/api/topics/${topic.id}/likes`);
             const responseData: { likes: number } = await response.json();
-            setLikes(responseData.likes | 0)
+            setLikes(responseData.likes | 0);
         };
         if (!ignore) func();
         return () => {

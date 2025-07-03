@@ -49,8 +49,8 @@ const Navbar = ({ isLoggedIn, name }: { isLoggedIn: boolean; name: string }) => 
                 />
                 {isLoggedIn && (
                     <>
-                        <IconButton 
-                            id='basic-button'
+                        <IconButton
+                            id="basic-button"
                             size="medium"
                             aria-controls={open ? 'basic-menu' : undefined}
                             aria-haspopup="true"
@@ -70,14 +70,22 @@ const Navbar = ({ isLoggedIn, name }: { isLoggedIn: boolean; name: string }) => 
                                 },
                             }}
                         >
-                            <MenuItem onClick={() => {
-                                handleClose();
-                                location.href = `/user/${name}`;
-                            }}>个人中心</MenuItem>
-                            <MenuItem onClick={() => {
-                                handleClose();
-                                setOpenDialog(true);
-                            }}>发布</MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    handleClose();
+                                    location.href = `/user/${name}`;
+                                }}
+                            >
+                                个人中心
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    handleClose();
+                                    setOpenDialog(true);
+                                }}
+                            >
+                                发布
+                            </MenuItem>
                             <Divider />
                             <MenuItem
                                 onClick={() => {
@@ -93,7 +101,9 @@ const Navbar = ({ isLoggedIn, name }: { isLoggedIn: boolean; name: string }) => 
                     </>
                 )}
                 {!isLoggedIn && (
-                    <Button href='/login' color="inherit">登录</Button>
+                    <Button href="/login" color="inherit">
+                        登录
+                    </Button>
                 )}
             </Toolbar>
         </AppBar>

@@ -62,7 +62,10 @@ export default function Register() {
     };
 
     return (
-        <Container maxWidth="xs" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+        <Container
+            maxWidth="xs"
+            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}
+        >
             <Card sx={{ width: '100%', boxShadow: 3, borderRadius: 4 }}>
                 <CardContent>
                     <Box sx={{ mb: 6, textAlign: 'center' }}>
@@ -73,11 +76,9 @@ export default function Register() {
                             请填写以下信息完成注册
                         </Typography>
                     </Box>
-                    
-                    <div className="alerts">
-                        {alerts}
-                    </div>
-                    
+
+                    <div className="alerts">{alerts}</div>
+
                     <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                         <TextField
                             label="用户名"
@@ -95,7 +96,7 @@ export default function Register() {
                                 },
                             }}
                         />
-                        
+
                         <TextField
                             label="密码"
                             type="password"
@@ -113,7 +114,7 @@ export default function Register() {
                                 },
                             }}
                         />
-                        
+
                         <TextField
                             label="确认密码"
                             type="password"
@@ -133,11 +134,11 @@ export default function Register() {
                         />
                     </Box>
                 </CardContent>
-                
+
                 <CardActions sx={{ p: 6, pt: 0, justifyContent: 'center' }}>
-                    <Button 
-                        variant="contained" 
-                        color="primary" 
+                    <Button
+                        variant="contained"
+                        color="primary"
                         onClick={handleRegister}
                         fullWidth
                         size="large"
@@ -152,10 +153,13 @@ export default function Register() {
                         注册
                     </Button>
                 </CardActions>
-                
+
                 <Box sx={{ p: 2, pt: 0, textAlign: 'center', color: '#666' }}>
                     <Typography variant="body2">
-                        已有账户？ <Link to="/login" style={{ color: '#1976D2', textDecoration: 'none' }}>立即登录</Link>
+                        已有账户？{' '}
+                        <Link to="/login" style={{ color: '#1976D2', textDecoration: 'none' }}>
+                            立即登录
+                        </Link>
                     </Typography>
                 </Box>
             </Card>

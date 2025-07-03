@@ -3,7 +3,7 @@ import { Typography, Container, Icon, Tabs, Tab, Card } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 import Navbar from '~/components/Navbar';
 import { WorkCard } from '~/components/WorkCard';
-import 'tailwindcss/index.css'
+import 'tailwindcss/index.css';
 
 import type { Route } from './+types/search';
 import type { Topic } from '~/interface/topics';
@@ -33,7 +33,7 @@ const SearchTabs = {
                     ))}
                 </div>
             </>
-        )
+        );
     },
     UserTab: ({ keyword }: { keyword: string }) => {
         const [searchResult, setSearchResult] = React.useState<IUser[]>([]);
@@ -55,20 +55,29 @@ const SearchTabs = {
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-2">
                     {searchResult.map(user => (
                         <Card key={user.username} sx={{ p: 2, border: '1px solid #ccc' }}>
-                            <Typography variant="h5" component={"a"} href={`/user/${user.username}`} sx={{ textDecoration: 'none' }} target="_blank" rel="noreferrer">{user.username}</Typography>
+                            <Typography
+                                variant="h5"
+                                component={'a'}
+                                href={`/user/${user.username}`}
+                                sx={{ textDecoration: 'none' }}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                {user.username}
+                            </Typography>
                         </Card>
                     ))}
                 </div>
             </>
-        )
-    }
-}
+        );
+    },
+};
 export async function loader({ request }: Route.LoaderArgs) {
     return {
         keyword: new URL(request.url).searchParams.get('keyword') || null,
         isLoggedIn: request.headers.get('Cookie')?.includes('isLoggedIn=true') || false,
         name: request.headers.get('Cookie')?.split('; name=')[1].split(';')[0] || '',
-        tab: new URL(request.url).searchParams.get('tab') || 'WorkTab'
+        tab: new URL(request.url).searchParams.get('tab') || 'WorkTab',
     };
 }
 export default function Search({ loaderData = { keyword: null, isLoggedIn: false, name: '', tab: 'WorkTab' } }) {
@@ -90,10 +99,10 @@ export default function Search({ loaderData = { keyword: null, isLoggedIn: false
         <>
             <Navbar isLoggedIn={loaderData.isLoggedIn} name={loaderData.name} />
             <Container sx={{ position: 'relative', top: '80px' }}>
-                    <Tabs value={tab} onChange={handleTabChange}>
-                        <Tab label="作者" value="UserTab" className="mx-2" />
-                        <Tab label="作品" value="WorkTab" className="mx-2" />
-                    </Tabs>
+                <Tabs value={tab} onChange={handleTabChange}>
+                    <Tab label="作者" value="UserTab" className="mx-2" />
+                    <Tab label="作品" value="WorkTab" className="mx-2" />
+                </Tabs>
                 <Typography variant="h5">
                     <Icon sx={{ mr: 1 }} fontSize="medium">
                         <SearchIcon />

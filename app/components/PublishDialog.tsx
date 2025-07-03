@@ -1,7 +1,15 @@
-import * as React from'react';
+import * as React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, InputAdornment } from '@mui/material';
 
-export default function PublishDialog({ open, setOpen, name }: { open: boolean, setOpen: (open: boolean) => void, name: string }) {
+export default function PublishDialog({
+    open,
+    setOpen,
+    name,
+}: {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    name: string;
+}) {
     const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
     const [content, setContent] = React.useState('');
@@ -12,15 +20,15 @@ export default function PublishDialog({ open, setOpen, name }: { open: boolean, 
         await fetch('/api/topics', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 title: title,
                 description: description,
                 content: content,
-                author: name
-            })
-        })
+                author: name,
+            }),
+        });
         handleClose();
     };
     return (
@@ -33,24 +41,20 @@ export default function PublishDialog({ open, setOpen, name }: { open: boolean, 
                     fullWidth
                     margin="dense"
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={e => setTitle(e.target.value)}
                     InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end"></InputAdornment>
-                        )
+                        endAdornment: <InputAdornment position="end"></InputAdornment>,
                     }}
                 />
                 <TextField
                     label="摘要"
                     variant="outlined"
                     value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    onChange={e => setDescription(e.target.value)}
                     fullWidth
                     margin="dense"
                     InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end"></InputAdornment>
-                        )
+                        endAdornment: <InputAdornment position="end"></InputAdornment>,
                     }}
                 />
                 <TextField
@@ -59,13 +63,11 @@ export default function PublishDialog({ open, setOpen, name }: { open: boolean, 
                     fullWidth
                     margin="dense"
                     value={content}
-                    onChange={(e) => setContent(e.target.value)}
+                    onChange={e => setContent(e.target.value)}
                     multiline
                     rows={10}
                     InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end"></InputAdornment>
-                        )
+                        endAdornment: <InputAdornment position="end"></InputAdornment>,
                     }}
                 />
             </DialogContent>
@@ -75,4 +77,4 @@ export default function PublishDialog({ open, setOpen, name }: { open: boolean, 
             </DialogActions>
         </Dialog>
     );
-};
+}

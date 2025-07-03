@@ -13,13 +13,15 @@ export const loader = ({ request, params }: Route.LoaderArgs) => {
         name: request.headers.get('Cookie')?.split('; name=')[1].split(';')[0] || '',
         username: params.id,
     };
-}
+};
 
-export default function Index({ loaderData={ isLoggedIn: false, name: '', username: '' } }) {
+export default function Index({ loaderData = { isLoggedIn: false, name: '', username: '' } }) {
     const isLoggedIn = loaderData.isLoggedIn;
     const name = loaderData.name;
     const username = loaderData.username;
-    const [pageComponent, setPageComponent] = React.useState<React.JSX.Element>(<Typography variant="h4">加载中...</Typography>);
+    const [pageComponent, setPageComponent] = React.useState<React.JSX.Element>(
+        <Typography variant="h4">加载中...</Typography>,
+    );
     if (!isLoggedIn) {
         return <div>请登录</div>;
     }
@@ -37,12 +39,12 @@ export default function Index({ loaderData={ isLoggedIn: false, name: '', userna
                 setPageComponent(
                     <>
                         <Typography variant="h4">{username}</Typography>
-                        <div className='grid grid-cols-4 gap-4 md:grid-cols-4'>
-                            {responseData2.topics.map((topic) => (
+                        <div className="grid grid-cols-4 gap-4 md:grid-cols-4">
+                            {responseData2.topics.map(topic => (
                                 <WorkCard key={topic.id} topic={topic} />
                             ))}
                         </div>
-                    </>
+                    </>,
                 );
             }
         };

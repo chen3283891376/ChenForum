@@ -8,9 +8,7 @@
 /* 基础代码字体与容器样式 */
 .markdown-body code,
 .markdown-body pre {
-    font-family:
-        SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
-        'Courier New', monospace;
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
     border-radius: 8px;
     transition: all 0.3s ease;
 }
@@ -140,7 +138,7 @@ table th {
         padding: 0.8rem;
         font-size: 0.8rem;
     }
-    
+
     .code-header {
         padding: 0.4rem 0.8rem;
         font-size: 0.9rem;

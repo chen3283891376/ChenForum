@@ -1,10 +1,18 @@
-import * as React from'react';
+import * as React from 'react';
 import { TextField, Card, CardContent, CardActions, IconButton, Stack, Typography, Divider } from '@mui/material';
 import { Send, Favorite, FavoriteBorder } from '@mui/icons-material';
 
 import type { Comment } from '~/interface/comments';
 
-export default function CommentBox({ topic_id, author, isLoggedIn }: { topic_id: string, author: string, isLoggedIn: boolean }) {
+export default function CommentBox({
+    topic_id,
+    author,
+    isLoggedIn,
+}: {
+    topic_id: string;
+    author: string;
+    isLoggedIn: boolean;
+}) {
     const [comment, setComment] = React.useState('');
     const [comments, setComments] = React.useState<Comment[]>([]);
     const [isLiked, setIsLiked] = React.useState(false);
@@ -50,36 +58,51 @@ export default function CommentBox({ topic_id, author, isLoggedIn }: { topic_id:
                         multiline
                         fullWidth
                         value={comment}
-                        onChange={(e) => setComment(e.target.value)}
+                        onChange={e => setComment(e.target.value)}
                         rows={4}
                     />
                 </CardContent>
                 <CardActions>
-                    <IconButton color='primary' disabled={!comment || comment.trim().length === 0 || !isLoggedIn } aria-label="send" onClick={handleSubmit}>
+                    <IconButton
+                        color="primary"
+                        disabled={!comment || comment.trim().length === 0 || !isLoggedIn}
+                        aria-label="send"
+                        onClick={handleSubmit}
+                    >
                         <Send />
                     </IconButton>
-                    <IconButton aria-label="like" color="primary" onClick={() => {
-                        fetch(`/api/topics/${topic_id}/likes`, {
-                            method: (isLiked ? 'DELETE' : 'POST'),
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ username: author }),
-                        });
-                        setIsLiked(!isLiked);
-                    }} disabled={!isLoggedIn}>
-                        {isLiked? <Favorite /> : <FavoriteBorder />}
+                    <IconButton
+                        aria-label="like"
+                        color="primary"
+                        onClick={() => {
+                            fetch(`/api/topics/${topic_id}/likes`, {
+                                method: isLiked ? 'DELETE' : 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ username: author }),
+                            });
+                            setIsLiked(!isLiked);
+                        }}
+                        disabled={!isLoggedIn}
+                    >
+                        {isLiked ? <Favorite /> : <FavoriteBorder />}
                     </IconButton>
                 </CardActions>
             </Card>
             <Divider />
             <div>
-                {comments.map((comment) => (
+                {comments.map(comment => (
                     <>
                         <Card key={comment.topic_id}>
                             <CardContent>
                                 <Stack direction="row" spacing={2}>
-                                    <Typography component={"a"} href={`/user/${comment.author}`} variant="h6" color="text.secondary">
+                                    <Typography
+                                        component={'a'}
+                                        href={`/user/${comment.author}`}
+                                        variant="h6"
+                                        color="text.secondary"
+                                    >
                                         {comment.author}
                                     </Typography>
                                     <Typography variant="h6" color="text.primary">

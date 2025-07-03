@@ -2,7 +2,7 @@ import * as React from 'react';
 import Navbar from '~/components/Navbar';
 import { Container } from '@mui/material';
 import { WorkCard } from '~/components/WorkCard';
-import 'tailwindcss/index.css'
+import 'tailwindcss/index.css';
 
 import type { Topic } from '~/interface/topics';
 import type { Route } from '../+types/root';
@@ -12,9 +12,9 @@ export const loader = ({ request }: Route.LoaderArgs) => {
         isLoggedIn: request.headers.get('Cookie')?.includes('isLoggedIn=true') || false,
         name: request.headers.get('Cookie')?.split('; name=')[1].split(';')[0] || '',
     };
-}
+};
 
-export default function Index({ loaderData={ isLoggedIn: false, name: '' } }) {
+export default function Index({ loaderData = { isLoggedIn: false, name: '' } }) {
     const isLoggedIn = loaderData.isLoggedIn;
     const name = loaderData.name;
     const [topics, setTopics] = React.useState<Topic[]>([]);
