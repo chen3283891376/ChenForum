@@ -160,6 +160,14 @@ def get_user_topics(name):
     topic_list.reverse()
     return jsonify({ "topics": topic_list })
 
+@app.route('/api/accounts/search')
+def search_user():
+    keyword = request.args.get('keyword')
+    c_users.execute('SELECT * FROM users WHERE username LIKE ?', ('%'+keyword+'%',))
+    users = c_users.fetchall()
+    user_list = [{'id': user[0], 'username': user[1]} for user in users]
+    return jsonify({ "users": user_list })
+
 @app.route('/api/accounts/register', methods=['POST'])
 def register():
     username = request.json['username']
