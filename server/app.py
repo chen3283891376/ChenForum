@@ -27,7 +27,7 @@ def init_db_users():
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS users
-                 (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)''')
+                 (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, signature TEXT)''')
     conn.commit()
     conn.close()
 init_db_articles()
@@ -151,6 +151,18 @@ def check_username():
         return jsonify({'has_username': True})
     else:
         return jsonify({'has_username': False})
+
+@app.route('/api/accounts/<string:name>/signature', methods=['GET'])
+def get_signature(name):
+    c_users.execute('SELECT signature FROM users WHERE username=?', (name,))
+    signature = c_users.fetchone()
+    return jsonify({'signature': signature[0]})
+@app.route('/api/accounts/<string:name>/signature', methods=['POST'])
+def set_signature(name):
+    signature = request.json['signature']
+    c_users.execute('UPDATE users SET signature=? WHERE username=?', (signature, name))
+    conn_users.commit()
+    return jsonify({'message': '签名更新成功!'})
 
 @app.route('/api/accounts/<string:name>/topics', methods=['GET'])
 def get_user_topics(name):

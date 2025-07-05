@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Typography } from '@mui/material';
+import { Button, Container, Dialog, DialogTitle, DialogContent, TextField, Typography, DialogActions } from '@mui/material';
 import { WorkCard } from '~/components/WorkCard';
 import Navbar from '~/components/Navbar';
 import 'tailwindcss/index.css';
@@ -19,9 +19,12 @@ export default function Index({ loaderData = { isLoggedIn: false, name: '', user
     const isLoggedIn = loaderData.isLoggedIn;
     const name = loaderData.name;
     const username = loaderData.username;
+    const signatureRef = React.useRef<HTMLSpanElement>(null);
     const [pageComponent, setPageComponent] = React.useState<React.JSX.Element>(
         <Typography variant="h4">加载中...</Typography>,
     );
+    const [openDialog, setOpenDialog] = React.useState<boolean>(false);
+    const [signatureContent, setSignatureContent] = React.useState<string>('');
     if (!isLoggedIn) {
         return <div>请登录</div>;
     }
@@ -33,12 +36,19 @@ export default function Index({ loaderData = { isLoggedIn: false, name: '', user
             if (!responseData.has_username) {
                 setPageComponent(<Typography variant="h4">用户名不存在</Typography>);
             } else {
+                const response3 = await fetch(`/api/accounts/${username}/signature`);
+                const responseData3: { signature: string } = await response3.json();
+
                 const response2 = await fetch(`/api/accounts/${username}/topics`);
                 const responseData2: { topics: Topic[] } = await response2.json();
-                console.log(responseData2.topics);
+                setSignatureContent(responseData3.signature || '');
                 setPageComponent(
                     <>
                         <Typography variant="h4">{username}</Typography>
+                        <Typography ref={signatureRef} variant='body2'>{responseData3.signature || '这个人还没有签名'}</Typography>
+                        {username === name && (
+                            <Button onClick={() => setOpenDialog(true)}>编辑签名</Button>
+                        )}
                         <div className="grid grid-cols-4 gap-4 md:grid-cols-4">
                             {responseData2.topics.map(topic => (
                                 <WorkCard key={topic.id} topic={topic} />
@@ -56,6 +66,38 @@ export default function Index({ loaderData = { isLoggedIn: false, name: '', user
     return (
         <>
             <Navbar isLoggedIn={isLoggedIn} name={name} />
+            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+                <DialogTitle>编辑签名</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        label="签名"
+                        variant="outlined"
+                        fullWidth
+                        value={signatureContent}
+                        onChange={(e) => {
+                            setSignatureContent(e.target.value);
+                        }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenDialog(false)}>取消</Button>
+                    <Button onClick={async () => {
+                        await fetch(`/api/accounts/${username}/signature`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                signature: signatureContent,
+                            }),
+                        });
+                        setOpenDialog(false);
+                        if (signatureRef.current) {
+                            signatureRef.current.innerText = signatureContent;
+                        }
+                    }}>保存</Button>
+                </DialogActions>
+            </Dialog>
             <Container className="mt-2" sx={{ position: 'relative', top: '80px' }}>
                 {pageComponent}
             </Container>
