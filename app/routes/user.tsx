@@ -1,5 +1,14 @@
 import * as React from 'react';
-import { Button, Container, Dialog, DialogTitle, DialogContent, TextField, Typography, DialogActions } from '@mui/material';
+import {
+    Button,
+    Container,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    TextField,
+    Typography,
+    DialogActions,
+} from '@mui/material';
 import { WorkCard } from '~/components/WorkCard';
 import Navbar from '~/components/Navbar';
 import 'tailwindcss/index.css';
@@ -45,10 +54,10 @@ export default function Index({ loaderData = { isLoggedIn: false, name: '', user
                 setPageComponent(
                     <>
                         <Typography variant="h4">{username}</Typography>
-                        <Typography ref={signatureRef} variant='body2'>{responseData3.signature || '这个人还没有签名'}</Typography>
-                        {username === name && (
-                            <Button onClick={() => setOpenDialog(true)}>编辑签名</Button>
-                        )}
+                        <Typography ref={signatureRef} variant="body2">
+                            {responseData3.signature || '这个人还没有签名'}
+                        </Typography>
+                        {username === name && <Button onClick={() => setOpenDialog(true)}>编辑签名</Button>}
                         <div className="grid grid-cols-4 gap-4 md:grid-cols-4">
                             {responseData2.topics.map(topic => (
                                 <WorkCard key={topic.id} topic={topic} />
@@ -74,28 +83,32 @@ export default function Index({ loaderData = { isLoggedIn: false, name: '', user
                         variant="outlined"
                         fullWidth
                         value={signatureContent}
-                        onChange={(e) => {
+                        onChange={e => {
                             setSignatureContent(e.target.value);
                         }}
                     />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpenDialog(false)}>取消</Button>
-                    <Button onClick={async () => {
-                        await fetch(`/api/accounts/${username}/signature`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                signature: signatureContent,
-                            }),
-                        });
-                        setOpenDialog(false);
-                        if (signatureRef.current) {
-                            signatureRef.current.innerText = signatureContent;
-                        }
-                    }}>保存</Button>
+                    <Button
+                        onClick={async () => {
+                            await fetch(`/api/accounts/${username}/signature`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    signature: signatureContent,
+                                }),
+                            });
+                            setOpenDialog(false);
+                            if (signatureRef.current) {
+                                signatureRef.current.innerText = signatureContent;
+                            }
+                        }}
+                    >
+                        保存
+                    </Button>
                 </DialogActions>
             </Dialog>
             <Container className="mt-2" sx={{ position: 'relative', top: '80px' }}>

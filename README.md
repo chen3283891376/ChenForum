@@ -14,6 +14,7 @@
 4. 开发时最好开着开发服务器，让 React Router 初始化一下 Router 的 types
 
 ## npm脚本
+
 - `npm run dev`: 打开开发服务器
 - `npm run typecheck`: 类型检测
 - `npm run format`: 格式化
