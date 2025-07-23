@@ -42,7 +42,6 @@ c_users = conn_users.cursor()
 conn_comments = sqlite3.connect('comments.db', check_same_thread=False)
 c_comments = conn_comments.cursor()
 conn_likes = sqlite3.connect('likes.db', check_same_thread=False)
-c_likes = conn_likes.cursor()
 
 app = Flask(__name__)
 
@@ -72,17 +71,6 @@ def get_topic(id):
     topic_dict = {'id': topic[0], 'name': topic[1], 'content': topic[2], 'description': topic[3], 'author': topic[4]}
     return jsonify(topic_dict)
 
-
-@app.route('/api/topics/<int:id>', methods=['PUT'])
-def update_topic(id):
-    title = request.json['title']
-    content = request.json['content']
-    description = request.json['description']
-    author = request.json['author']
-    c_articles.execute('UPDATE topics SET title=?, content=? description=? author=? WHERE id=?', (title, content, description, author, id))
-    conn_articles.commit()
-    return jsonify({'message': '文章更新成功!'})
-
 @app.route('/api/topics/<int:id>', methods=['DELETE'])
 def delete_topic(id):
     c_articles.execute('DELETE FROM topics WHERE id=?', (id,))
@@ -107,29 +95,33 @@ def create_comment(id):
 
 @app.route('/api/topics/<int:id>/likes', methods=['GET'])
 def get_likes(id):
-    c_likes.execute('SELECT * FROM likes WHERE topic_id=?', (id,))
-    likes = c_likes.fetchall()
+    cursor = conn_likes.cursor()
+    cursor.execute('SELECT * FROM likes WHERE topic_id=?', (id,))
+    likes = cursor.fetchall()
     return jsonify({'likes': len(likes)})
 
 @app.route('/api/topics/<int:id>/likes', methods=['POST'])
 def create_like(id):
     username = request.json['username']
-    c_likes.execute('INSERT INTO likes (username, topic_id) VALUES (?,?)', (username, id))
+    cursor = conn_likes.cursor()
+    cursor.execute('INSERT INTO likes (username, topic_id) VALUES (?,?)', (username, id))
     conn_likes.commit()
     return jsonify({'message': '点赞成功!'})
 
 @app.route('/api/topics/<int:id>/likes', methods=['DELETE'])
 def delete_like(id):
     username = request.json['username']
-    c_likes.execute('DELETE FROM likes WHERE username=? AND topic_id=?', (username, id))
+    cursor = conn_likes.cursor()
+    cursor.execute('DELETE FROM likes WHERE username=? AND topic_id=?', (username, id))
     conn_likes.commit()
     return jsonify({'message': '取消点赞成功!'})
 
 @app.route('/api/topics/<int:id>/has_liked', methods=['GET'])
 def has_liked(id):
     username = request.args.get('username')
-    c_likes.execute('SELECT * FROM likes WHERE username=? AND topic_id=?', (username, id))
-    like = c_likes.fetchone()
+    cursor = conn_likes.cursor()
+    cursor.execute('SELECT * FROM likes WHERE username=? AND topic_id=?', (username, id))
+    like = cursor.fetchone()
     if like:
         return jsonify({'has_liked': True})
     else:

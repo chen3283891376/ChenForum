@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
     Button,
+    Box,
     Container,
     Dialog,
     DialogTitle,
@@ -15,6 +16,9 @@ import 'tailwindcss/index.css';
 
 import type { Topic } from '~/interface/topics';
 import type { Route } from '../+types/root';
+import type { PaletteMode } from '@mui/material';
+import { createTheme, useMediaQuery, ThemeProvider } from '@mui/material';
+import { getDesignTokens, getButtonGradient, getGradientStyle } from '~/theme';
 
 export const loader = ({ request, params }: Route.LoaderArgs) => {
     return {
@@ -37,6 +41,14 @@ export default function Index({ loaderData = { isLoggedIn: false, name: '', user
     if (!isLoggedIn) {
         return <div>请登录</div>;
     }
+    
+    const [mode, setMode] = React.useState<PaletteMode>('light');
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    const muiTheme = createTheme(getDesignTokens(mode));
+    React.useEffect(() => {
+        setMode(prefersDarkMode ? 'dark' : 'light');
+    }, [prefersDarkMode]);
+
     React.useEffect(() => {
         let ignore = false;
         const func = async () => {
@@ -53,14 +65,28 @@ export default function Index({ loaderData = { isLoggedIn: false, name: '', user
                 setSignatureContent(responseData3.signature || '');
                 setPageComponent(
                     <>
-                        <Typography variant="h4">{username}</Typography>
-                        <Typography ref={signatureRef} variant="body2">
-                            {responseData3.signature || '这个人还没有签名'}
-                        </Typography>
-                        {username === name && <Button onClick={() => setOpenDialog(true)}>编辑签名</Button>}
+                        <Typography variant="h4" color='text.primary'>{username}</Typography>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                width: '100%',
+                                justifyItems: 'space-between',
+                            }}
+                        >
+                            <Typography ref={signatureRef} sx={{ flexGrow: 1 }} variant="subtitle1" color='text.secondary'>
+                                {responseData3.signature || '这个人还没有签名'}
+                            </Typography>
+                            {username === name && (
+                                <Button sx={{ background: getButtonGradient({ mode }), color: 'white' }} onClick={() => setOpenDialog(true)}>
+                                    编辑签名
+                                </Button>
+                            )}
+                        </div>
                         <div className="grid grid-cols-4 gap-4 md:grid-cols-4">
                             {responseData2.topics.map(topic => (
-                                <WorkCard key={topic.id} topic={topic} />
+                                <WorkCard key={topic.id} topic={topic} mode={mode} />
                             ))}
                         </div>
                     </>,
@@ -73,47 +99,59 @@ export default function Index({ loaderData = { isLoggedIn: false, name: '', user
         };
     }, []);
     return (
-        <>
-            <Navbar isLoggedIn={isLoggedIn} name={name} />
-            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-                <DialogTitle>编辑签名</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        label="签名"
-                        variant="outlined"
-                        fullWidth
-                        value={signatureContent}
-                        onChange={e => {
-                            setSignatureContent(e.target.value);
-                        }}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenDialog(false)}>取消</Button>
-                    <Button
-                        onClick={async () => {
-                            await fetch(`/api/accounts/${username}/signature`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    signature: signatureContent,
-                                }),
-                            });
-                            setOpenDialog(false);
-                            if (signatureRef.current) {
-                                signatureRef.current.innerText = signatureContent;
-                            }
-                        }}
-                    >
-                        保存
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            <Container className="mt-2" sx={{ position: 'relative', top: '80px' }}>
-                {pageComponent}
-            </Container>
-        </>
+        <ThemeProvider theme={muiTheme}>
+            <Box sx={{
+                minHeight: '100vh',
+                background: getGradientStyle({ mode }),
+                backgroundAttachment: 'fixed',
+                backgroundSize: '100% 100%',
+                backgroundRepeat: 'no-repeat',
+                boxSizing: 'border-box',
+                margin: 0,
+                overflowX: 'hidden',
+            }}>
+                <Navbar isLoggedIn={isLoggedIn} name={name} mode={mode} setMode={setMode} />
+                <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+                    <DialogTitle>编辑签名</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            label="签名"
+                            variant="outlined"
+                            fullWidth
+                            value={signatureContent}
+                            onChange={e => {
+                                setSignatureContent(e.target.value);
+                            }}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button sx={{ background: getButtonGradient({ mode }), color: 'white' }} onClick={() => setOpenDialog(false)}>取消</Button>
+                        <Button
+                            sx={{ background: getButtonGradient({ mode }), color: 'white' }}
+                            onClick={async () => {
+                                await fetch(`/api/accounts/${username}/signature`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        signature: signatureContent,
+                                    }),
+                                });
+                                setOpenDialog(false);
+                                if (signatureRef.current) {
+                                    signatureRef.current.innerText = signatureContent;
+                                }
+                            }}
+                        >
+                            保存
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                <Container className="mt-2" sx={{ position: 'relative', top: '80px' }}>
+                    {pageComponent}
+                </Container>
+            </Box>
+        </ThemeProvider>
     );
 }

@@ -1,14 +1,19 @@
 import * as React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, InputAdornment } from '@mui/material';
+import { getButtonGradient } from '~/theme';
+
+import type { PaletteMode } from '@mui/material';
 
 export default function PublishDialog({
     open,
     setOpen,
     name,
+    mode
 }: {
     open: boolean;
     setOpen: (open: boolean) => void;
     name: string;
+    mode: PaletteMode;
 }) {
     const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
@@ -72,8 +77,8 @@ export default function PublishDialog({
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>取消</Button>
-                <Button onClick={handlePublish}>发布</Button>
+                <Button sx={{ background: getButtonGradient({ mode }), color: 'white' }} onClick={handleClose}>取消</Button>
+                <Button sx={{ background: getButtonGradient({ mode }), color: 'white' }} onClick={handlePublish}>发布</Button>
             </DialogActions>
         </Dialog>
     );

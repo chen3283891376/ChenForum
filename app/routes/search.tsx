@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, Container, Icon, Tabs, Tab, Card } from '@mui/material';
+import { Typography, Container, Icon, Tabs, Tab, Card, Box } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 import Navbar from '~/components/Navbar';
 import { WorkCard } from '~/components/WorkCard';
@@ -8,9 +8,12 @@ import 'tailwindcss/index.css';
 import type { Route } from './+types/search';
 import type { Topic } from '~/interface/topics';
 import type { IUser } from '~/interface/user';
+import type { PaletteMode } from '@mui/material';
+import { createTheme, useMediaQuery, ThemeProvider } from '@mui/material';
+import { getDesignTokens, getGradientStyle } from '~/theme';
 
 const SearchTabs = {
-    WorkTab: ({ keyword }: { keyword: string }) => {
+    WorkTab: ({ keyword, mode }: { keyword: string, mode: PaletteMode }) => {
         const [searchResult, setSearchResult] = React.useState<Topic[]>([]);
         React.useEffect(() => {
             let ignore = false;
@@ -29,7 +32,7 @@ const SearchTabs = {
                 {searchResult.length === 0 && <Typography variant="h5">没有搜索到相关内容</Typography>}
                 <div className="grid grid-cols-4 gap-4 md:grid-cols-4">
                     {searchResult.map(topic => (
-                        <WorkCard key={topic.id} topic={topic} />
+                        <WorkCard key={topic.id} topic={topic} mode={mode} />
                     ))}
                 </div>
             </>
@@ -87,6 +90,13 @@ export default function Search({ loaderData = { keyword: null, isLoggedIn: false
     const keyword = loaderData.keyword;
     const [tab, setTab] = React.useState(loaderData.tab);
 
+    const [mode, setMode] = React.useState<PaletteMode>('light');
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    const muiTheme = createTheme(getDesignTokens(mode));
+    React.useEffect(() => {
+        setMode(prefersDarkMode ? 'dark' : 'light');
+    }, [prefersDarkMode]);
+
     const handleTabChange = (event: React.SyntheticEvent, newTab: string) => {
         if (newTab) {
             setTab(newTab);
@@ -96,22 +106,33 @@ export default function Search({ loaderData = { keyword: null, isLoggedIn: false
     };
 
     return (
-        <>
-            <Navbar isLoggedIn={loaderData.isLoggedIn} name={loaderData.name} />
-            <Container sx={{ position: 'relative', top: '80px' }}>
-                <Tabs value={tab} onChange={handleTabChange}>
-                    <Tab label="作者" value="UserTab" className="mx-2" />
-                    <Tab label="作品" value="WorkTab" className="mx-2" />
-                </Tabs>
-                <Typography variant="h5">
-                    <Icon sx={{ mr: 1 }} fontSize="medium">
-                        <SearchIcon />
-                    </Icon>
-                    搜索结果
-                </Typography>
-                {tab === 'WorkTab' && <SearchTabs.WorkTab keyword={keyword} />}
-                {tab === 'UserTab' && <SearchTabs.UserTab keyword={keyword} />}
-            </Container>
-        </>
+        <ThemeProvider theme={muiTheme}>
+            <Box sx={{
+                minHeight: '100vh',
+                background: getGradientStyle({ mode }),
+                backgroundAttachment: 'fixed',
+                backgroundSize: '100% 100%',
+                backgroundRepeat: 'no-repeat',
+                boxSizing: 'border-box',
+                margin: 0,
+                overflowX: 'hidden',
+            }}>
+                <Navbar isLoggedIn={loaderData.isLoggedIn} name={loaderData.name} mode={mode} setMode={setMode} KEYWORD={keyword} />
+                <Container sx={{ position: 'relative', top: '80px' }}>
+                    <Tabs value={tab} onChange={handleTabChange}>
+                        <Tab label="作者" value="UserTab" className="mx-2" />
+                        <Tab label="作品" value="WorkTab" className="mx-2" />
+                    </Tabs>
+                    <Typography variant="h5">
+                        <Icon sx={{ mr: 1 }} fontSize="medium">
+                            <SearchIcon />
+                        </Icon>
+                        搜索结果
+                    </Typography>
+                    {tab === 'WorkTab' && <SearchTabs.WorkTab mode={mode} keyword={keyword} />}
+                    {tab === 'UserTab' && <SearchTabs.UserTab keyword={keyword} />}
+                </Container>
+            </Box>
+        </ThemeProvider>
     );
 }

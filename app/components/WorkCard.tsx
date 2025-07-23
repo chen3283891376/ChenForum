@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { Card, CardContent, CardHeader, Typography, Button } from '@mui/material';
+import { getButtonGradient } from '~/theme';
 
 import type { Topic } from '~/interface/topics';
+import type { PaletteMode } from '@mui/material';
 
-export function WorkCard({ topic }: { topic: Topic }) {
+export function WorkCard({ topic, mode }: { topic: Topic, mode: PaletteMode }) {
     const [likes, setLikes] = React.useState(0);
     React.useEffect(() => {
         let ignore = false;
@@ -18,11 +20,11 @@ export function WorkCard({ topic }: { topic: Topic }) {
         };
     }, []);
     return (
-        <Card key={topic.id}>
+        <Card key={topic.id} className="max-width-sm">
             <CardHeader title={topic.name} subheader={topic.description} />
             <CardContent>
                 <Typography
-                    sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                    className="overflow-hidden text-ellipsis whitespace-nowrap"
                     variant="body2"
                     color="text.primary"
                 >
@@ -32,7 +34,7 @@ export function WorkCard({ topic }: { topic: Topic }) {
                     作者：<a href={`/user/${topic.author}`}>{topic.author}</a> | 点赞：{likes}
                 </Typography>
                 <br />
-                <Button variant="contained" color="primary" href={`/topic/${topic.id}`}>
+                <Button sx={{ color: 'white', background: getButtonGradient({ mode }) }} href={`/topic/${topic.id}`}>
                     详情
                 </Button>
             </CardContent>
