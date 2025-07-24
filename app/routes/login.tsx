@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TextField, Button, Container, Card, CardContent, CardActions, Box, Typography } from '@mui/material';
 import { Link } from 'react-router';
 import AutoCloseAlert from '~/components/AutoCloseAlert';
-import { setCookie } from '~/utils';
+import { setCookie, clearAllCookies } from '~/utils';
 
 export default function Login() {
     const [username, setUsername] = React.useState('');
@@ -26,6 +26,7 @@ export default function Login() {
                 ...alerts,
                 <AutoCloseAlert severity="success" key={alerts.length} children={responseData.message} />,
             ]);
+            clearAllCookies();
             setCookie('name', username, 2222, '/');
             setCookie('isLoggedIn', 'true', 2222, '/');
             setTimeout(() => {
