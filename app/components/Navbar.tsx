@@ -28,7 +28,7 @@ const Navbar = ({
     name,
     mode,
     setMode,
-    KEYWORD
+    KEYWORD,
 }: {
     isLoggedIn: boolean;
     name: string;

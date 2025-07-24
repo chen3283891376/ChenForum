@@ -41,7 +41,7 @@ export default function Index({ loaderData = { isLoggedIn: false, name: '', user
     if (!isLoggedIn) {
         return <div>请登录</div>;
     }
-    
+
     const [mode, setMode] = React.useState<PaletteMode>('light');
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const muiTheme = createTheme(getDesignTokens(mode));
@@ -65,7 +65,9 @@ export default function Index({ loaderData = { isLoggedIn: false, name: '', user
                 setSignatureContent(responseData3.signature || '');
                 setPageComponent(
                     <>
-                        <Typography variant="h4" color='text.primary'>{username}</Typography>
+                        <Typography variant="h4" color="text.primary">
+                            {username}
+                        </Typography>
                         <div
                             style={{
                                 display: 'flex',
@@ -75,11 +77,19 @@ export default function Index({ loaderData = { isLoggedIn: false, name: '', user
                                 justifyItems: 'space-between',
                             }}
                         >
-                            <Typography ref={signatureRef} sx={{ flexGrow: 1 }} variant="subtitle1" color='text.secondary'>
+                            <Typography
+                                ref={signatureRef}
+                                sx={{ flexGrow: 1 }}
+                                variant="subtitle1"
+                                color="text.secondary"
+                            >
                                 {responseData3.signature || '这个人还没有签名'}
                             </Typography>
                             {username === name && (
-                                <Button sx={{ background: getButtonGradient({ mode }), color: 'white' }} onClick={() => setOpenDialog(true)}>
+                                <Button
+                                    sx={{ background: getButtonGradient({ mode }), color: 'white' }}
+                                    onClick={() => setOpenDialog(true)}
+                                >
                                     编辑签名
                                 </Button>
                             )}
@@ -100,16 +110,18 @@ export default function Index({ loaderData = { isLoggedIn: false, name: '', user
     }, []);
     return (
         <ThemeProvider theme={muiTheme}>
-            <Box sx={{
-                minHeight: '100vh',
-                background: getGradientStyle({ mode }),
-                backgroundAttachment: 'fixed',
-                backgroundSize: '100% 100%',
-                backgroundRepeat: 'no-repeat',
-                boxSizing: 'border-box',
-                margin: 0,
-                overflowX: 'hidden',
-            }}>
+            <Box
+                sx={{
+                    minHeight: '100vh',
+                    background: getGradientStyle({ mode }),
+                    backgroundAttachment: 'fixed',
+                    backgroundSize: '100% 100%',
+                    backgroundRepeat: 'no-repeat',
+                    boxSizing: 'border-box',
+                    margin: 0,
+                    overflowX: 'hidden',
+                }}
+            >
                 <Navbar isLoggedIn={isLoggedIn} name={name} mode={mode} setMode={setMode} />
                 <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
                     <DialogTitle>编辑签名</DialogTitle>
@@ -125,7 +137,12 @@ export default function Index({ loaderData = { isLoggedIn: false, name: '', user
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button sx={{ background: getButtonGradient({ mode }), color: 'white' }} onClick={() => setOpenDialog(false)}>取消</Button>
+                        <Button
+                            sx={{ background: getButtonGradient({ mode }), color: 'white' }}
+                            onClick={() => setOpenDialog(false)}
+                        >
+                            取消
+                        </Button>
                         <Button
                             sx={{ background: getButtonGradient({ mode }), color: 'white' }}
                             onClick={async () => {

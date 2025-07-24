@@ -13,7 +13,7 @@ import { createTheme, useMediaQuery, ThemeProvider } from '@mui/material';
 import { getDesignTokens, getGradientStyle } from '~/theme';
 
 const SearchTabs = {
-    WorkTab: ({ keyword, mode }: { keyword: string, mode: PaletteMode }) => {
+    WorkTab: ({ keyword, mode }: { keyword: string; mode: PaletteMode }) => {
         const [searchResult, setSearchResult] = React.useState<Topic[]>([]);
         React.useEffect(() => {
             let ignore = false;
@@ -107,17 +107,25 @@ export default function Search({ loaderData = { keyword: null, isLoggedIn: false
 
     return (
         <ThemeProvider theme={muiTheme}>
-            <Box sx={{
-                minHeight: '100vh',
-                background: getGradientStyle({ mode }),
-                backgroundAttachment: 'fixed',
-                backgroundSize: '100% 100%',
-                backgroundRepeat: 'no-repeat',
-                boxSizing: 'border-box',
-                margin: 0,
-                overflowX: 'hidden',
-            }}>
-                <Navbar isLoggedIn={loaderData.isLoggedIn} name={loaderData.name} mode={mode} setMode={setMode} KEYWORD={keyword} />
+            <Box
+                sx={{
+                    minHeight: '100vh',
+                    background: getGradientStyle({ mode }),
+                    backgroundAttachment: 'fixed',
+                    backgroundSize: '100% 100%',
+                    backgroundRepeat: 'no-repeat',
+                    boxSizing: 'border-box',
+                    margin: 0,
+                    overflowX: 'hidden',
+                }}
+            >
+                <Navbar
+                    isLoggedIn={loaderData.isLoggedIn}
+                    name={loaderData.name}
+                    mode={mode}
+                    setMode={setMode}
+                    KEYWORD={keyword}
+                />
                 <Container sx={{ position: 'relative', top: '80px' }}>
                     <Tabs value={tab} onChange={handleTabChange}>
                         <Tab label="作者" value="UserTab" className="mx-2" />

@@ -5,7 +5,7 @@ import { getButtonGradient } from '~/theme';
 import type { Topic } from '~/interface/topics';
 import type { PaletteMode } from '@mui/material';
 
-export function WorkCard({ topic, mode }: { topic: Topic, mode: PaletteMode }) {
+export function WorkCard({ topic, mode }: { topic: Topic; mode: PaletteMode }) {
     const [likes, setLikes] = React.useState(0);
     React.useEffect(() => {
         let ignore = false;

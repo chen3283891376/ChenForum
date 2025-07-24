@@ -8,7 +8,7 @@ export default function PublishDialog({
     open,
     setOpen,
     name,
-    mode
+    mode,
 }: {
     open: boolean;
     setOpen: (open: boolean) => void;
@@ -77,8 +77,12 @@ export default function PublishDialog({
                 />
             </DialogContent>
             <DialogActions>
-                <Button sx={{ background: getButtonGradient({ mode }), color: 'white' }} onClick={handleClose}>取消</Button>
-                <Button sx={{ background: getButtonGradient({ mode }), color: 'white' }} onClick={handlePublish}>发布</Button>
+                <Button sx={{ background: getButtonGradient({ mode }), color: 'white' }} onClick={handleClose}>
+                    取消
+                </Button>
+                <Button sx={{ background: getButtonGradient({ mode }), color: 'white' }} onClick={handlePublish}>
+                    发布
+                </Button>
             </DialogActions>
         </Dialog>
     );
