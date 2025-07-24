@@ -17,11 +17,11 @@ export function setCookie(name: string, value: string, days: number, path: strin
 }
 
 export function clearAllCookies() {
-  var cookies = document.cookie.split("; ");
-  for (var i = 0; i < cookies.length; i++) {
-    var cookie = cookies[i];
-    var eqPos = cookie.indexOf("=");
-    var cookieName = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-    document.cookie = cookieName + "=; expires=" + new Date(0).toUTCString();
-  }
+    var cookies = document.cookie.split('; ');
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf('=');
+        var cookieName = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = cookieName + '=; expires=' + new Date(0).toUTCString();
+    }
 }
