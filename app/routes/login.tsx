@@ -27,8 +27,8 @@ export default function Login() {
                 <AutoCloseAlert severity="success" key={alerts.length} children={responseData.message} />,
             ]);
             clearAllCookies();
-            setCookie('name', username, 2222, '/');
             setCookie('isLoggedIn', 'true', 2222, '/');
+            setCookie('name', username, 2222, '/');
             setTimeout(() => {
                 window.location.href = '/';
             }, 1000);
