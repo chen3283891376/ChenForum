@@ -70,10 +70,12 @@ export default function Topic({ loaderData = { id: '1', isLoggedIn: false, name:
             hljs.highlightAll();
             renderMathInElement(document.body, {
                 delimiters: [
-                    { left: '$', right: '$', display: true },
+                    { left: '$$', right: '$$', display: true },
+                    { left: '$', right: '$', display: false },
                     { left: '\\(', right: '\\)', display: false },
-                    { left: '\\[', right: '\\]', display: true },
+                    { left: '\\[', right: '\\]', display: true }
                 ],
+                throwOnError: false
             });
 
             document.querySelectorAll('.markdown-body pre code').forEach(element => {

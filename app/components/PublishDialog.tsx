@@ -35,6 +35,7 @@ export default function PublishDialog({
             }),
         });
         handleClose();
+        location.reload();
     };
     return (
         <Dialog open={open} onClose={handleClose}>
